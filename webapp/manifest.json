@@ -40,6 +40,9 @@
     }
   },
   "sap.ui5": {
+    "config": {
+      "fullWidth": true
+    },
     "rootView": {
       "viewName": "zpm.kanban.view.Main",
       "type": "XML",
