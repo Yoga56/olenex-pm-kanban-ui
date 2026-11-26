@@ -1,0 +1,15 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+  <Dialog id="saveAsDialog" title="{i18n>variantSaveAs}" contentWidth="24rem">
+    <content>
+      <VBox class="sapUiSmallMargin">
+        <Label text="{i18n>variantName}" labelFor="saName" required="true"/>
+        <Input id="saName" value="{sa>/name}" valueLiveUpdate="true" maxLength="60"/>
+        <CheckBox text="{i18n>variantSetDefault}" selected="{sa>/isDefault}"/>
+      </VBox>
+    </content>
+    <buttons>
+      <Button text="{i18n>variantSave}" type="Emphasized" enabled="{= !!${sa>/name} &amp;&amp; ${sa>/name}.trim().length > 0 }" press="onSaConfirm"/>
+      <Button text="{i18n>dlgCancel}" press="onSaCancel"/>
+    </buttons>
+  </Dialog>
+</core:FragmentDefinition>

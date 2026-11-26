@@ -1,0 +1,32 @@
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:form="sap.ui.layout.form">
+  <Dialog id="orderDialog" title="{dlg>/title}" contentWidth="30rem" draggable="true" resizable="true">
+    <content>
+      <MessageStrip text="{i18n>dlgNotMovable}" type="Information" showIcon="true" visible="{= !${dlg>/movable} }"
+        class="sapUiSmallMargin"/>
+      <form:SimpleForm editable="false" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12"
+        columnsXL="1" columnsL="1" columnsM="1">
+        <Label text="{i18n>colDescription}"/><Text text="{dlg>/desc}"/>
+        <Label text="{i18n>colOrderStatus}"/><ObjectStatus text="{dlg>/statusText}" state="{dlg>/statusState}"/>
+        <Label text="{i18n>colFuncLoc}"/><Text text="{dlg>/funcLoc}"/>
+        <Label text="{i18n>colEquipment}"/><Text text="{dlg>/equipment}"/>
+        <Label text="{i18n>colWorkCenter}"/><Text text="{dlg>/workCenter}"/>
+        <Label text="{i18n>dlgPlanStart}"/><Text text="{dlg>/startText}"/>
+        <Label text="{i18n>dlgPlanEnd}"/><Text text="{dlg>/endText}"/>
+      </form:SimpleForm>
+      <form:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12"
+        columnsXL="1" columnsL="1" columnsM="1">
+        <Label text="{i18n>dlgChangeStart}" labelFor="dlgDate"/>
+        <DatePicker id="dlgDate" value="{dlg>/newStart}" valueFormat="yyyy-MM-dd" displayFormat="medium"
+          enabled="{dlg>/movable}" change="onDlgDateChange"/>
+      </form:SimpleForm>
+    </content>
+    <buttons>
+      <Button text="{i18n>dlgSave}" type="Emphasized" enabled="{dlg>/canSave}" press="onDlgSave"/>
+      <Button text="{i18n>dlgOpenOrder}" press="onDlgOpenOrder"/>
+      <Button text="{i18n>dlgCancel}" press="onDlgClose"/>
+    </buttons>
+  </Dialog>
+</core:FragmentDefinition>

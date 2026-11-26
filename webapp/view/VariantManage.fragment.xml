@@ -1,0 +1,26 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+  <Dialog id="manageDialog" title="{i18n>manageTitle}" contentWidth="40rem" draggable="true">
+    <content>
+      <Table items="{mg>/list}" class="sapUiSmallMargin" width="auto">
+        <columns>
+          <Column><Text text="{i18n>variantName}"/></Column>
+          <Column width="7rem" hAlign="Center"><Text text="{i18n>variantDefault}"/></Column>
+          <Column width="4rem"/>
+        </columns>
+        <items>
+          <ColumnListItem>
+            <cells>
+              <Input value="{mg>name}" editable="{= !${mg>readOnly} }" valueLiveUpdate="true"/>
+              <RadioButton groupName="defaultView" selected="{mg>isDefault}" select="onMgDefault"/>
+              <Button icon="sap-icon://delete" type="Transparent" tooltip="{i18n>manageDelete}" visible="{= !${mg>readOnly} }" press="onMgDelete"/>
+            </cells>
+          </ColumnListItem>
+        </items>
+      </Table>
+    </content>
+    <buttons>
+      <Button text="{i18n>vsOk}" type="Emphasized" press="onMgOk"/>
+      <Button text="{i18n>dlgCancel}" press="onMgCancel"/>
+    </buttons>
+  </Dialog>
+</core:FragmentDefinition>

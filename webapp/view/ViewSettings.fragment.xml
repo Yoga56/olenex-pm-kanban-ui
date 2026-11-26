@@ -1,0 +1,73 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+  <Dialog id="viewSettingsDialog" contentWidth="34rem" contentHeight="32rem" draggable="true" resizable="true" stretch="{device>/system/phone}">
+    <customHeader>
+      <Bar>
+        <contentLeft><Title text="{i18n>viewSettings}" level="H2"/></contentLeft>
+        <contentRight><Button text="{i18n>vsReset}" type="Transparent" press="onVsReset"/></contentRight>
+      </Bar>
+    </customHeader>
+    <content>
+      <IconTabBar id="vsTabs" headerMode="Inline" expandable="false" applyContentPadding="false" stretchContentHeight="true">
+        <items>
+
+          <!-- Columns: show / hide / reorder -->
+          <IconTabFilter key="columns" text="{i18n>vsColumns}">
+            <OverflowToolbar style="Clear">
+              <SearchField width="14rem" placeholder="{i18n>vsSearch}" liveChange="onVsSearch"/>
+              <ToolbarSpacer/>
+              <Label text="{i18n>vsShowSelected}" labelFor="vsHideUnselected"/>
+              <Switch id="vsHideUnselected" state="{vs>/hideUnselected}" change="onVsFilter" customTextOn=" " customTextOff=" "/>
+            </OverflowToolbar>
+            <CheckBox class="sapUiSmallMarginBegin" text="{vs>/columnsTitle}" selected="{vs>/allSelected}" select="onVsSelectAll"/>
+            <List id="vsColumns" items="{vs>/columns}" showSeparators="Inner" backgroundDesign="Transparent">
+              <CustomListItem>
+                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBeginEnd">
+                  <CheckBox text="{vs>text}" selected="{vs>selected}" select="onVsColumnSelect"/>
+                  <HBox visible="{vs>selected}">
+                    <Button icon="sap-icon://navigation-up-arrow" type="Transparent" tooltip="{i18n>vsMoveUp}" press="onVsMoveUp"/>
+                    <Button icon="sap-icon://navigation-down-arrow" type="Transparent" tooltip="{i18n>vsMoveDown}" press="onVsMoveDown"/>
+                  </HBox>
+                </HBox>
+              </CustomListItem>
+            </List>
+          </IconTabFilter>
+
+          <!-- Sort: up to three levels -->
+          <IconTabFilter key="sort" text="{i18n>vsSort}">
+            <VBox class="sapUiSmallMargin">
+              <VBox items="{vs>/sort}">
+                <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                  <Select selectedKey="{vs>key}" width="13rem" items="{path:'vs>/sortableColumns', templateShareable:false}" forceSelection="false"
+                    placeholder="{i18n>vsSortBy}">
+                    <core:Item key="{vs>key}" text="{vs>text}"/>
+                  </Select>
+                  <SegmentedButton selectedKey="{vs>dir}" class="sapUiTinyMarginBeginEnd">
+                    <items>
+                      <SegmentedButtonItem key="asc" icon="sap-icon://sort-ascending" tooltip="{i18n>vsAsc}"/>
+                      <SegmentedButtonItem key="desc" icon="sap-icon://sort-descending" tooltip="{i18n>vsDesc}"/>
+                    </items>
+                  </SegmentedButton>
+                  <Button icon="sap-icon://decline" type="Transparent" tooltip="{i18n>vsRemove}" press="onVsRemoveSort"/>
+                </HBox>
+              </VBox>
+              <Button text="{i18n>vsAddSort}" icon="sap-icon://add" type="Transparent" press="onVsAddSort" visible="{= ${vs>/sort}.length &lt; 3 }"/>
+            </VBox>
+          </IconTabFilter>
+
+          <!-- Group: one column -->
+          <IconTabFilter key="group" text="{i18n>vsGroup}">
+            <VBox class="sapUiSmallMargin">
+              <Select selectedKey="{vs>/group}" width="16rem" items="{path:'vs>/groupColumns', templateShareable:false}">
+                <core:Item key="{vs>key}" text="{vs>text}"/>
+              </Select>
+            </VBox>
+          </IconTabFilter>
+        </items>
+      </IconTabBar>
+    </content>
+    <buttons>
+      <Button text="{i18n>vsOk}" type="Emphasized" press="onVsOk"/>
+      <Button text="{i18n>dlgCancel}" press="onVsCancel"/>
+    </buttons>
+  </Dialog>
+</core:FragmentDefinition>

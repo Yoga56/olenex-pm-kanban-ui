@@ -1,0 +1,242 @@
+/*
+ * Only theme parameters (CSS variables of the SAP theme) are used - no hard-coded colors -
+ * so the app follows Morning Horizon, Evening Horizon (dark) and the high-contrast themes.
+ */
+
+/* ---------- filter bar in the dynamic page header ---------- */
+.pmFilterBar { gap: .5rem 1rem; align-items: flex-end; }
+.pmFilterItem { width: 13rem; flex: 0 0 13rem; }
+.pmFilterItem:has(.sapMSF) { width: auto; flex: 0 0 auto; }
+.pmFilterItem .sapMMultiComboBox { width: 100%; min-width: 0; }
+/* fixed height and width: selected tokens scroll sideways instead of growing the field */
+.pmFilterItem .sapMMultiComboBox .sapMTokenizer { flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; }
+.pmFilterItem .sapMMultiComboBox .sapMMultiComboBoxInner { min-width: 0; }
+.pmFilterItem .sapMLabel { display: block; padding-bottom: .25rem; }
+
+/* ---------- Kanban ---------- */
+.pmKanban { overflow-x: auto; gap: 1rem; padding-bottom: .5rem; }
+.pmKanbanCol { flex: 1 1 0; min-width: 20rem; max-width: 26rem; background: var(--sapBackgroundColor); border-radius: var(--sapElement_BorderCornerRadius); padding: .5rem; box-sizing: border-box; }
+.pmKanbanHead { padding: .25rem .5rem .75rem; border-bottom: .0625rem solid var(--sapGroup_TitleBorderColor); margin-bottom: .5rem; }
+.pmKanbanList.sapMList { background: transparent; }
+.pmKanbanList .sapMLIB { margin-bottom: .5rem; border-radius: var(--sapElement_BorderCornerRadius); background: var(--sapTile_Background); box-shadow: var(--sapContent_Shadow0); border: .0625rem solid var(--sapTile_BorderColor); }
+.pmKanbanList .sapMLIB:hover { box-shadow: var(--sapContent_Shadow1); }
+.pmMeta { color: var(--sapContent_LabelColor); font-size: var(--sapFontSmallSize); }
+
+/* ---------- Schedule board ---------- */
+.pmBoard { overflow: auto; max-height: calc(100vh - 22rem); min-height: 12rem; background: var(--sapList_Background); border: .0625rem solid var(--sapList_BorderColor); border-radius: var(--sapElement_BorderCornerRadius); }
+.pmBoardTable { border-collapse: separate; border-spacing: 0; width: 100%; font-family: var(--sapFontFamily); font-size: var(--sapFontSize); color: var(--sapTextColor); }
+.pmBoardTable th, .pmBoardTable td { border-right: .0625rem solid var(--sapList_BorderColor); border-bottom: .0625rem solid var(--sapList_BorderColor); padding: 0; vertical-align: top; }
+.pmBoardTable thead th { position: sticky; top: 0; z-index: 2; background: var(--sapList_HeaderBackground); color: var(--sapList_HeaderTextColor); padding: .5rem; text-align: center; font-weight: var(--sapFontHeaderWeight, bold); white-space: nowrap; }
+.pmBoardTable thead th.pmCurrent { background: var(--sapInformationBackground); box-shadow: inset 0 -.1875rem 0 var(--sapInformativeElementColor); }
+.pmSub { font-weight: normal; color: var(--sapContent_LabelColor); font-size: var(--sapFontSmallSize); }
+.pmBoardTable .pmRowHead { position: sticky; left: 0; z-index: 1; background: var(--sapList_Background); min-width: 14rem; max-width: 18rem; padding: .5rem; text-align: left; }
+.pmBoardTable thead th.pmCorner { left: 0; z-index: 3; }
+.pmRowTitle { font-weight: bold; display: block; }
+.pmRowHead small { display: block; color: var(--sapContent_LabelColor); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pmCell { height: 2.75rem; padding: .25rem !important; }
+.pmCell.pmCellUnsched { background: var(--sapList_AlternatingBackground); min-width: 9rem; }
+.pmCell.pmCellSuccess     { background: var(--sapSuccessBackground); }
+.pmCell.pmCellInformation { background: var(--sapInformationBackground); }
+.pmCell.pmCellError       { background: var(--sapErrorBackground); }
+.pmCell.pmOver { outline: .125rem dashed var(--sapContent_FocusColor); outline-offset: -.125rem; }
+
+/* chip = status text + icon + tinted background (colour is never the only signal) */
+.pmChip { display: flex; align-items: center; gap: .25rem; margin: .125rem 0; padding: .125rem .5rem; border-radius: var(--sapElement_BorderCornerRadius); border: .0625rem solid; border-left-width: .25rem; background: var(--sapTile_Background); color: var(--sapTextColor); cursor: pointer; overflow: hidden; max-width: 16rem; }
+.pmChip[draggable="true"] { cursor: grab; }
+.pmChipText { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pmChipIcon { flex: none; font-size: var(--sapFontSmallSize); }
+.pmChipSuccess     { border-color: var(--sapSuccessBorderColor); }
+.pmChipSuccess .pmChipIcon { color: var(--sapPositiveElementColor); }
+.pmChipInformation { border-color: var(--sapInformationBorderColor); }
+.pmChipInformation .pmChipIcon { color: var(--sapInformativeElementColor); }
+.pmChipError       { border-color: var(--sapErrorBorderColor); }
+.pmChipError .pmChipIcon { color: var(--sapNegativeElementColor); }
+.pmChip:focus-visible { outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor); outline-offset: .0625rem; }
+.pmChip.pmDragging { opacity: .4; }
+
+/* legend */
+.pmLegend { display: inline-block; width: .75rem; height: .75rem; border-radius: .125rem; border: .0625rem solid; margin-right: .25rem; vertical-align: middle; }
+.pmLegend.pmChipSuccess { background: var(--sapSuccessBackground); }
+.pmLegend.pmChipInformation { background: var(--sapInformationBackground); }
+.pmLegend.pmChipError { background: var(--sapErrorBackground); }
+.pmKanbanList .sapMLIB.sapMListNoData { border: none; box-shadow: none; background: transparent; min-height: 0; }
+
+/* Kanban columns fill their height so the whole column is a drop target */
+.pmKanbanCol { display: flex; flex-direction: column; }
+.pmKanbanCol > .sapMList, .pmKanbanList { flex: 1 1 auto; min-height: 16rem; }
+.pmKanbanList .sapMLIB.sapMLIBDragging { opacity: .4; }
+
+/* ---------- saved view title ("Standard v") ---------- */
+.pmVariantTitle.sapMBtn .sapMBtnInner, .pmVariantTitle.sapMBtn .sapMBtnContent { font-size: var(--sapFontHeader2Size); font-weight: bold; color: var(--sapLinkColor); }
+.pmVariantTitle.sapMBtn { padding-inline: 0; }
+
+/* ---------- tabs: leave room so the focus frame is not cut off ---------- */
+.pmTabs .sapMITH, .pmTabs .sapMITBHead { padding-top: .25rem; }
+.pmTabs .sapMITBContent { overflow: visible; }
+
+/* ---------- Kanban card: compact, every value labelled, content wraps with the card width ---------- */
+.pmKanbanList .sapMLIB.pmCard { padding: 0; }
+.pmCardBody { padding: .5rem .75rem; width: 100%; box-sizing: border-box; gap: .125rem; }
+.pmCardHead { gap: .25rem .5rem; }
+.pmCardTitle { font-weight: bold; color: var(--sapTextColor); }
+.pmFacts { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: .125rem .75rem; margin-top: .125rem; }
+.pmFact { display: flex !important; gap: .375rem; min-width: 0; align-items: flex-start; font-size: var(--sapFontSmallSize); }
+.pmFactLabel { color: var(--sapContent_LabelColor); flex: none; font-size: var(--sapFontSmallSize) !important; }
+.pmFactValue { min-width: 0; overflow-wrap: anywhere; font-size: var(--sapFontSmallSize) !important; }
+.pmKanbanHead { margin-bottom: .5rem; }
+
+/* ---------- schedule: narrower fixed columns, dates inside chips ---------- */
+.pmBoard { max-height: calc(100vh - 19rem); }
+.pmBoardTable .pmRowHead { min-width: 11rem; max-width: 14rem; }
+.pmCell { min-width: 7rem; }
+.pmCell.pmCellUnsched { min-width: 8rem; }
+.pmBoardTable thead th { padding: .375rem .5rem; }
+.pmBoardTable thead th .pmSub { white-space: nowrap; }
+.pmChip { flex-wrap: nowrap; }
+.pmChipDate { flex: none; margin-left: auto; padding-left: .25rem; color: var(--sapContent_LabelColor); font-size: var(--sapFontSmallSize); }
+
+/* ---------- Kanban card: more air (overrides of the compact values above) ---------- */
+.pmKanbanList .sapMLIB { margin-bottom: .75rem; }
+.pmCardBody { padding: 1rem 1.125rem; }
+.pmCardBody > * + * { margin-top: .625rem; }          /* the body is a plain block (renderType Bare), so spacing is done with margins */
+.pmCardHead { margin-bottom: 0; row-gap: .25rem; }
+.pmCardTitle { display: block; line-height: 1.4; margin-top: .5rem; }
+.pmFacts { gap: .5rem 1.25rem; padding-top: .625rem; border-top: .0625rem solid var(--sapGroup_TitleBorderColor); }
+.pmFacts + .pmFacts { margin-top: .5rem; padding-top: .5rem; border-top-style: dashed; }
+.pmFact { gap: .5rem; line-height: 1.45; }
+.pmKanban { gap: 1.25rem; }
+.pmKanbanCol { padding: .75rem; }
+.pmKanbanHead { padding-bottom: .75rem; margin-bottom: .75rem; }
+
+
+/* ---------- layout: use the full width, 1rem page gutters, board fills the height ---------- */
+.pmPage .sapFDynamicPageContent, .pmPage .sapFDynamicPageContentFitContainer { padding-inline: .75rem !important; }
+.pmPage .sapFDynamicPageHeader { padding-inline: .75rem !important; }
+.pmPage .sapFDynamicPageTitle { padding-inline: .75rem !important; }
+.pmPage .sapMITH { padding-inline: 0; }
+.pmBoard { max-height: calc(100vh - 18rem); }
+.pmBoardTable .pmRowHead { min-width: 10rem; max-width: 13rem; }
+.pmCell { min-width: 0; }
+.pmCell.pmCellUnsched { min-width: 0; }
+
+/* schedule: fixed layout - the period columns share the available width equally and never grow with their chips */
+.pmBoardTable { table-layout: fixed; }
+.pmBoardTable thead th.pmCorner { width: 11rem; }
+.pmBoardTable thead th.pmCorner + th { width: 7.5rem; }
+.pmBoardTable .pmRowHead { max-width: none; }
+.pmChip { max-width: 100%; box-sizing: border-box; }
+/* chips: order text on the first line, plan dates on the second, so narrow period columns keep both readable */
+.pmChip { flex-wrap: wrap; row-gap: 0; }
+.pmChipText { flex: 1 1 0; min-width: 0; }
+.pmChipDate { flex: 0 0 100%; margin-left: 0; padding-left: 1.125rem; box-sizing: border-box; }
+.pmCell { height: 3.5rem; }
+.pmChip { padding: .125rem .375rem; }
+.pmChipDate { white-space: nowrap; padding-left: 0; overflow: hidden; text-overflow: ellipsis; }
+.pmCell { padding: .125rem .25rem !important; }
+/* line 1: order number + description; line 2: status icon + plan dates */
+.pmChipText { order: 1; flex: 0 0 100%; }
+.pmChipIcon { order: 2; }
+.pmChipDate { order: 3; flex: 1 1 0; min-width: 0; }
+.pmChip:not(:has(.pmChipDate)) .pmChipText { order: 2; flex: 1 1 0; }
+.pmChip:not(:has(.pmChipDate)) .pmChipIcon { order: 1; }
+
+/* ---------- Kanban: columns share the full width, each column scrolls on its own ---------- */
+.pmKanban { height: calc(100vh - 19rem); min-height: 22rem; align-items: stretch; gap: 1rem; overflow-y: hidden; }
+.pmKanbanCol { flex: 1 1 0; min-width: 17rem; max-width: none; display: flex; flex-direction: column; min-height: 0; }
+.pmKanbanCol > .sapMList, .pmKanbanCol > .pmKanbanList { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; }
+.pmKanbanHead { flex: none; }
+/* facts: label above value, two per row; the functional location uses the full width */
+.pmCardBody .pmFacts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem 1rem; }
+.pmCardBody .pmFacts .pmFact { flex-direction: column; gap: .0625rem; min-width: 0; }
+.pmCardBody .pmFacts .pmFact:first-child { grid-column: 1 / -1; }
+.pmCardBody .pmFact .pmFactValue { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.pmCardBody .pmFact .sapMText { white-space: normal; }
+.pmKanbanCol > .sapMFlexItem:has(.pmKanbanList) { flex: 1 1 0; min-height: 0; overflow-y: auto; overflow-x: hidden; }
+/* card header: "Plan start: date" never breaks between label and value; it drops to its own line when the card is narrow */
+.pmCardHead .sapMObjStatus { margin-left: auto; max-width: 100%; }
+.pmCardHead .sapMObjStatus, .pmCardHead .sapMObjStatus * { white-space: normal; }
+
+/* ---------- fixes ---------- */
+/* the page itself must never scroll sideways (a stray scrollLeft shifted header, tabs and content against each other) */
+html, body, .sapFSemanticPage, .pmPage .sapFDynamicPage, .pmPage .sapFDynamicPageContentWrapper,
+.pmPage .sapFDynamicPageContent, .pmPage .sapMITBContainerContent, .pmPage .sapMITBContent { overflow-x: clip; }
+/* kanban: room inside the scrolling column so card shadow and focus outline are not cut off */
+.pmKanbanCol > .sapMFlexItem:has(.pmKanbanList) { padding: .25rem .375rem .5rem; }
+.pmKanbanCol { padding-inline: .375rem; }
+.pmKanbanList .sapMLIB.pmCard { outline-offset: -.125rem; overflow: visible; }
+.pmKanbanList .sapMLIB.pmCard:focus-visible { outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor); }
+
+/* ---------- one corner radius for every object (matches the Horizon button / popover radius, .5rem) ---------- */
+:root {
+  --pmRadius: .5rem;
+  --sapElement_BorderCornerRadius: .5rem;   /* chips, cards, columns, board */
+  --sapField_BorderCornerRadius: .5rem;     /* inputs, combo boxes, search */
+  --sapButton_BorderCornerRadius: .5rem;
+  --sapTile_BorderCornerRadius: .5rem;
+  --sapPopover_BorderCornerRadius: .5rem;
+}
+.pmPage .sapMITH { border-radius: var(--pmRadius) var(--pmRadius) 0 0; overflow: hidden; }
+.pmBoard, .pmKanbanCol, .pmKanbanList .sapMLIB.pmCard, .pmChip { border-radius: var(--pmRadius); }
+.pmPage .sapMListTbl, .pmPage .sapMTable { border-radius: 0 0 var(--pmRadius) var(--pmRadius); }
+.pmLegend { border-radius: .25rem; }
+/* small controls keep a small radius (the shared token would turn the checkbox into a circle) */
+.sapMCb .sapMCbBg { border-radius: .25rem; }
+
+/* hard guard against a stray horizontal scroll of the whole page (it moved header and content by different amounts) */
+html, body { overflow-x: hidden; }
+body > div, #container, #container-uiarea, #container-uiarea > .sapUiView, .sapFDynamicPage, .sapFDynamicPageTitleWrapper, .sapFDynamicPageHeader { overflow-x: clip; max-width: 100vw; }
+
+/* the tab content can never be wider (or offset) than the page: boards scroll inside themselves */
+.pmTabs, .pmTabs .sapMITBContainerContent, .pmTabs .sapMITBContent, .pmTabs .sapMITBContent > * { min-width: 0; max-width: 100%; box-sizing: border-box; margin-inline: 0; }
+.pmKanban, .pmBoard { contain: inline-size; max-width: 100%; }
+/* thin, theme-colored scrollbars inside the Kanban columns and boards (the default dark bar sat on top of the cards) */
+.pmKanbanCol > .sapMFlexItem:has(.pmKanbanList), .pmKanban, .pmBoard { scrollbar-width: thin; scrollbar-color: var(--sapScrollBar_FaceColor) var(--sapScrollBar_TrackColor); }
+
+/* the dynamic page switches between two content containers (normal / fit-container) that carry different theme paddings (up to 3rem each side);
+   both get the same gutter so the content never jumps when the tab changes */
+.pmPage .sapFDynamicPageContentFitContainer, .pmPage .sapFDynamicPageContent { box-sizing: border-box; }
+
+/* ---------- schedule as a Gantt-style grid: one bar per order, from plan start to plan end ---------- */
+.pmGrid { display: grid; grid-template-rows: auto; grid-auto-rows: 4rem; width: 100%; box-sizing: border-box;
+  font-family: var(--sapFontFamily); font-size: var(--sapFontSize); color: var(--sapTextColor); }
+.pmGrid > * { box-sizing: border-box; min-width: 0; }
+.pmHead { position: sticky; top: 0; z-index: 4; background: var(--sapList_HeaderBackground); color: var(--sapList_HeaderTextColor);
+  padding: .375rem .5rem; text-align: center; font-weight: var(--sapFontHeaderWeight, bold); white-space: nowrap;
+  border-right: .0625rem solid var(--sapList_BorderColor); border-bottom: .0625rem solid var(--sapList_BorderColor); }
+.pmHead.pmCurrent { background: var(--sapInformationBackground); box-shadow: inset 0 -.1875rem 0 var(--sapInformativeElementColor); }
+.pmHead.pmCorner { left: 0; z-index: 6; }
+.pmHead.pmHeadUnsched { left: 11rem; z-index: 5; }
+.pmRowHead { position: sticky; left: 0; z-index: 3; background: var(--sapList_Background); padding: .5rem; text-align: left;
+  border-right: .0625rem solid var(--sapList_BorderColor); border-bottom: .0625rem solid var(--sapList_BorderColor); overflow: hidden; }
+.pmRowHead small { display: block; color: var(--sapContent_LabelColor); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pmCell { border-right: .0625rem solid var(--sapList_BorderColor); border-bottom: .0625rem solid var(--sapList_BorderColor); min-width: 0; height: auto; padding: 0 !important; }
+.pmCell.pmCurrent { background: var(--sapInformationBackground); }
+.pmCell.pmCellUnsched { position: sticky; left: 11rem; z-index: 2; background: var(--sapList_AlternatingBackground); min-width: 0; }
+.pmCell.pmOver { outline: .125rem dashed var(--sapContent_FocusColor); outline-offset: -.125rem; }
+
+.pmBar { z-index: 1; margin: .1875rem .25rem; padding: .1875rem .5rem; display: flex; flex-direction: column; justify-content: center; gap: .0625rem;
+  min-width: 0; overflow: hidden; cursor: pointer; background: var(--sapTile_Background); color: var(--sapTextColor);
+  border: .0625rem solid; border-left-width: .25rem; border-radius: var(--pmRadius); }
+.pmBar[draggable="true"] { cursor: grab; }
+.pmBar.pmDragging { opacity: .4; }
+.pmBar:hover { box-shadow: var(--sapContent_Shadow1); }
+.pmBar:focus-visible { outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor); outline-offset: .0625rem; }
+.pmBarSuccess { border-color: var(--sapSuccessBorderColor); background: var(--sapSuccessBackground); }
+.pmBarInformation { border-color: var(--sapInformationBorderColor); background: var(--sapInformationBackground); }
+.pmBarError { border-color: var(--sapErrorBorderColor); background: var(--sapErrorBackground); }
+.pmBarClipL { border-top-left-radius: 0; border-bottom-left-radius: 0; margin-left: 0; }
+.pmBarClipR { border-top-right-radius: 0; border-bottom-right-radius: 0; margin-right: 0; }
+.pmBarTop { display: flex; align-items: center; gap: .25rem; min-width: 0; white-space: nowrap; }
+.pmBarIcon { flex: none; font-size: var(--sapFontSmallSize); }
+.pmBarSuccess .pmBarIcon { color: var(--sapPositiveElementColor); }
+.pmBarInformation .pmBarIcon { color: var(--sapInformativeElementColor); }
+.pmBarError .pmBarIcon { color: var(--sapNegativeElementColor); }
+.pmBarNum { flex: none; }
+.pmBarDesc { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.pmBarDate { color: var(--sapContent_LabelColor); font-size: var(--sapFontSmallSize); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.pmBar.pmBarUnsched { z-index: 3; position: sticky; left: 11rem; }
+.pmBarDesc { font-size: var(--sapFontSmallSize); line-height: 1.25; }
+.pmBarNum { font-size: var(--sapFontSize); }
+.pmBar { gap: 0; padding-block: .25rem; }
+.pmBarDesc { white-space: nowrap; }

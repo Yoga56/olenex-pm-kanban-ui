@@ -1,0 +1,14 @@
+# Deploy to the ABAP repository of the S/4HANA Cloud Public Edition system (BAS: "Deploy" / fiori deploy).
+specVersion: "3.1"
+metadata:
+  name: zpmkanban
+type: application
+builder:
+  resources:
+    excludes:
+      - "/localService/**"
+      - "/test/**"
+# The deploy target (system, package, transport) is passed on the command line or in
+# the BAS deploy wizard, e.g.:
+#   fiori deploy --config ui5-deploy.yaml --url https://<tenant>-api.s4hana.cloud.sap \
+#                --name ZPM_KANBAN --package ZPM_KANBAN --transport <TR>

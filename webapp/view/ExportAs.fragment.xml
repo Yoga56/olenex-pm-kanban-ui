@@ -1,0 +1,20 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+  <Dialog id="exportAsDialog" title="{i18n>exportAs}" contentWidth="26rem">
+    <content>
+      <VBox class="sapUiSmallMargin">
+        <Label text="{i18n>exportFile}" labelFor="exName" required="true"/>
+        <Input id="exName" value="{ex>/name}" valueLiveUpdate="true" maxLength="80"/>
+        <Label text="{i18n>exportFormat}" labelFor="exFormat" class="sapUiSmallMarginTop"/>
+        <Select id="exFormat" selectedKey="{ex>/format}" width="100%">
+          <core:Item key="xlsx" text="{i18n>exportXlsx}"/>
+          <core:Item key="csv" text="{i18n>exportCsv}"/>
+        </Select>
+        <Text text="{ex>/info}" class="sapUiSmallMarginTop pmMeta"/>
+      </VBox>
+    </content>
+    <buttons>
+      <Button text="{i18n>exportBtn}" type="Emphasized" enabled="{= !!${ex>/name} }" press="onExAsConfirm"/>
+      <Button text="{i18n>dlgCancel}" press="onExAsCancel"/>
+    </buttons>
+  </Dialog>
+</core:FragmentDefinition>

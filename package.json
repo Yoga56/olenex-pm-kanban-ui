@@ -1,0 +1,16 @@
+{
+  "name": "zpm-kanban",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "ui5 serve -o index.html?mock=true",
+    "start-live": "ui5 serve -o index.html",
+    "start-mock": "ui5 serve -o index.html?mock=true",
+    "build": "ui5 build --clean-dest --config ui5-deploy.yaml",
+    "deploy": "npm run build && fiori deploy --config ui5-deploy.yaml"
+  },
+  "devDependencies": {
+    "@ui5/cli": "^4.0.0",
+    "@sap/ux-ui5-tooling": "^1.15.0"
+  }
+}

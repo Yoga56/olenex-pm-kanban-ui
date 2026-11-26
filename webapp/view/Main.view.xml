@@ -1,0 +1,228 @@
+<mvc:View
+  controllerName="zpm.kanban.controller.Main"
+  xmlns="sap.m"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns:core="sap.ui.core"
+  xmlns:semantic="sap.f.semantic"
+  xmlns:board="zpm.kanban.control"
+  xmlns:dnd="sap.ui.core.dnd"
+  displayBlock="true"
+  height="100%">
+
+  <!-- Fiori floorplan: freestyle page = sap.f.semantic.SemanticPage (dynamic page: collapsible header with filters, content, footer) -->
+  <semantic:SemanticPage id="page" class="pmPage" headerPinnable="true" toggleHeaderOnTitleClick="true" showFooter="{view>/undo/visible}">
+
+    <!-- saved views (variant management) in the title, like the standard list report -->
+    <semantic:titleHeading>
+      <Button id="variantBtn" text="{view>/variants/title}" icon="sap-icon://slim-arrow-down" iconFirst="false"
+        type="Transparent" class="pmVariantTitle" press="onVariantPress" tooltip="{i18n>variantMyViews}"/>
+    </semantic:titleHeading>
+
+    <semantic:titleSnappedContent>
+      <Text text="{view>/filterInfo}"/>
+    </semantic:titleSnappedContent>
+
+    <semantic:titleContent>
+      <ObjectStatus text="Mock data" state="Warning" icon="sap-icon://message-warning" visible="{view>/mock}"/>
+    </semantic:titleContent>
+
+    <semantic:titleCustomTextActions>
+      <Button text="{i18n>refresh}" icon="sap-icon://refresh" press="onRefresh" type="Transparent"/>
+    </semantic:titleCustomTextActions>
+
+    <!-- filter bar (live update: every change filters immediately; one search field across all columns) -->
+    <semantic:headerContent>
+      <FlexBox wrap="Wrap" class="pmFilterBar">
+        <VBox class="pmFilterItem">
+          <Label text="{i18n>filterPlant}" labelFor="fPlant"/>
+          <MultiComboBox id="fPlant" width="100%" selectedKeys="{view>/filters/plants}" selectionFinish="onFilterChange"
+            items="{path:'view>/options/plants', templateShareable:false}">
+            <core:Item key="{view>key}" text="{view>text}"/>
+          </MultiComboBox>
+        </VBox>
+        <VBox class="pmFilterItem">
+          <Label text="{i18n>filterPlannerGroup}" labelFor="fPlanner"/>
+          <MultiComboBox id="fPlanner" width="100%" selectedKeys="{view>/filters/plannerGroups}" selectionFinish="onFilterChange"
+            items="{path:'view>/options/plannerGroups', templateShareable:false}">
+            <core:Item key="{view>key}" text="{view>text}"/>
+          </MultiComboBox>
+        </VBox>
+        <VBox class="pmFilterItem">
+          <Label text="{i18n>filterWorkCenter}" labelFor="fWorkCenter"/>
+          <MultiComboBox id="fWorkCenter" width="100%" selectedKeys="{view>/filters/workCenters}" selectionFinish="onFilterChange"
+            items="{path:'view>/options/workCenters', templateShareable:false}">
+            <core:Item key="{view>key}" text="{view>text}"/>
+          </MultiComboBox>
+        </VBox>
+        <VBox class="pmFilterItem">
+          <Label text="{i18n>filterStatus}" labelFor="fStatus"/>
+          <MultiComboBox id="fStatus" width="100%" selectedKeys="{view>/filters/statuses}" selectionFinish="onFilterChange"
+            items="{path:'view>/options/statuses', templateShareable:false}">
+            <core:Item key="{view>key}" text="{view>text}"/>
+          </MultiComboBox>
+        </VBox>
+        <VBox class="pmFilterItem">
+          <Label text="{i18n>filterNameSearch}" labelFor="fSearch"/>
+          <SearchField id="fSearch" width="18rem" placeholder="{i18n>filterSearch}" value="{view>/filters/search}"
+            liveChange="onFilterChange" search="onFilterChange"/>
+        </VBox>
+        <VBox class="pmFilterItem">
+          <Label text=" "/>
+          <CheckBox id="fHideClosed" text="{i18n>filterHideClosed}" selected="{view>/filters/hideClosed}" select="onFilterChange"/>
+        </VBox>
+        <VBox>
+          <Label text=" "/>
+          <Button text="{i18n>filterClear}" type="Transparent" press="onClearFilters"/>
+        </VBox>
+      </FlexBox>
+    </semantic:headerContent>
+
+    <semantic:content>
+      <!-- views on the same content: textual tabs with counters (list report pattern) -->
+      <IconTabBar id="tabs" class="pmTabs sapUiTinyMarginTop" headerMode="Inline" expandable="false" stretchContentHeight="false"
+        applyContentPadding="false" selectedKey="{view>/tab}" select="onTabSelect">
+        <items>
+
+          <!-- ================= LIST ================= -->
+          <IconTabFilter key="list" text="{i18n>tabList}" count="{view>/counts/list}">
+            <VBox>
+              <!-- columns, sorting and grouping are built from the view settings (see controller) -->
+              <Table id="orderTable" hiddenInPopin="Low" popinLayout="GridSmall" sticky="ColumnHeaders,HeaderToolbar"
+                growing="true" growingThreshold="100" growingScrollToLoad="false" width="100%">
+                <headerToolbar>
+                  <OverflowToolbar>
+                    <Title text="{i18n>tableTitle} ({view>/counts/list})" level="H3"/>
+                    <ToolbarSpacer/>
+                    <!-- same controls as the standard list report: row details, view settings, export -->
+                    <SegmentedButton selectedKey="{view>/rowDetails}" selectionChange="onRowDetailsChange">
+                      <items>
+                        <SegmentedButtonItem key="more" icon="sap-icon://detail-more" tooltip="{i18n>detailMore}"/>
+                        <SegmentedButtonItem key="less" icon="sap-icon://detail-less" tooltip="{i18n>detailLess}"/>
+                      </items>
+                    </SegmentedButton>
+                    <Button icon="sap-icon://action-settings" type="Transparent" tooltip="{i18n>viewSettings}" press="onViewSettings"/>
+                    <MenuButton icon="sap-icon://excel-attachment" buttonMode="Split" tooltip="{i18n>exportBtn}" defaultAction="onExport">
+                      <menu>
+                        <Menu>
+                          <items>
+                            <MenuItem text="{i18n>exportBtn}" press="onExport"/>
+                            <MenuItem text="{i18n>exportAs}" press="onExportAs"/>
+                          </items>
+                        </Menu>
+                      </menu>
+                    </MenuButton>
+                  </OverflowToolbar>
+                </headerToolbar>
+                <noData>
+                  <IllustratedMessage illustrationType="sapIllus-NoSearchResults" illustrationSize="Spot"
+                    title="{i18n>noDataTitle}" description="{i18n>noDataDescription}"/>
+                </noData>
+              </Table>
+            </VBox>
+          </IconTabFilter>
+
+          <!-- ================= KANBAN ================= -->
+          <IconTabFilter key="kanban" text="{i18n>tabKanban}" count="{view>/counts/kanban}">
+            <OverflowToolbar style="Clear">
+              <Text text="{i18n>kanbanHint}" class="pmMeta"/>
+              <ToolbarSpacer/>
+              <Label text="{i18n>cardLayout}"/>
+              <SegmentedButton selectedKey="{view>/cardLayout}" selectionChange="onCardLayoutChange">
+                <items>
+                  <SegmentedButtonItem key="compact" text="{i18n>cardCompact}"/>
+                  <SegmentedButtonItem key="detailed" text="{i18n>cardDetailed}"/>
+                </items>
+              </SegmentedButton>
+            </OverflowToolbar>
+            <HBox id="kanban" class="pmKanban" items="{view>/kanban}" alignItems="Stretch">
+              <VBox class="pmKanbanCol">
+                <HBox class="pmKanbanHead" alignItems="Center" justifyContent="SpaceBetween">
+                  <Title text="{view>title}" level="H4"/>
+                  <Text text="{view>countText}" class="pmMeta"/>
+                </HBox>
+                <List class="pmKanbanList" items="{path:'view>cards', templateShareable:false}" showSeparators="None"
+                  backgroundDesign="Transparent" noDataText=" ">
+                  <!-- cards can be dragged to another column (= status change); drop on a card or on the free space of the column -->
+                  <dragDropConfig>
+                    <dnd:DragInfo groupName="kanban" sourceAggregation="items" dragStart="onKanbanDragStart"/>
+                    <dnd:DropInfo groupName="kanban" targetAggregation="items" dropPosition="On" dropEffect="Move" drop="onKanbanDrop"/>
+                    <dnd:DropInfo groupName="kanban" dropPosition="On" dropEffect="Move" drop="onKanbanDrop"/>
+                  </dragDropConfig>
+                  <!-- every value on the card carries its label, so nobody has to guess what a number means -->
+                  <CustomListItem type="Inactive" class="pmCard">
+                    <customData><core:CustomData key="overdue" value="{view>IsOverdue}" writeToDom="true"/></customData>
+                    <VBox class="pmCardBody" renderType="Bare">
+                      <HBox justifyContent="SpaceBetween" alignItems="Center" wrap="Wrap" class="pmCardHead">
+                        <Link text="{view>OrderTitle}" press="onOpenOrder" tooltip="{i18n>openDisplay}"/>
+                        <ObjectStatus title="{i18n>cardPlanStart}" text="{view>StartDateStatusText}"
+                          state="{= ${view>IsOverdue} ? 'Error' : 'None' }"
+                          icon="{= ${view>IsOverdue} ? 'sap-icon://alert' : '' }"/>
+                      </HBox>
+                      <Text text="{view>MaintenanceOrderDesc}" maxLines="2" class="pmCardTitle"/>
+                      <FlexBox class="pmFacts" items="{path:'view>Facts', templateShareable:false}">
+                        <HBox class="pmFact" tooltip="{view>value}">
+                          <Text text="{view>label}" class="pmFactLabel" wrapping="false"/>
+                          <Text text="{view>value}" class="pmFactValue" wrapping="true"/>
+                        </HBox>
+                      </FlexBox>
+                      <FlexBox class="pmFacts" visible="{= ${view>/cardLayout} === 'detailed' }" items="{path:'view>FactsMore', templateShareable:false}">
+                        <HBox class="pmFact" tooltip="{view>value}">
+                          <Text text="{view>label}" class="pmFactLabel" wrapping="false"/>
+                          <Text text="{view>value}" class="pmFactValue" wrapping="true"/>
+                        </HBox>
+                      </FlexBox>
+                    </VBox>
+                  </CustomListItem>
+                </List>
+                <Text text="{view>moreText}" class="pmMeta sapUiTinyMargin" visible="{= !!${view>moreText} }"/>
+              </VBox>
+            </HBox>
+          </IconTabFilter>
+
+          <!-- ================= SCHEDULE ================= -->
+          <IconTabFilter key="schedule" text="{i18n>tabSchedule}" count="{view>/counts/schedule}">
+            <VBox>
+              <OverflowToolbar style="Clear">
+                <Label text="{i18n>scheduleRowsBy}"/>
+                <SegmentedButton selectedKey="{view>/schedule/rowsBy}" selectionChange="onScheduleChange">
+                  <items>
+                    <SegmentedButtonItem key="FunctionalLocation" text="{i18n>rowsFuncLoc}"/>
+                    <SegmentedButtonItem key="Equipment" text="{i18n>rowsEquipment}"/>
+                    <SegmentedButtonItem key="MainWorkCenter" text="{i18n>rowsWorkCenter}"/>
+                  </items>
+                </SegmentedButton>
+                <Label text="{i18n>scheduleGranularity}"/>
+                <SegmentedButton selectedKey="{view>/schedule/granularity}" selectionChange="onScheduleChange">
+                  <items>
+                    <SegmentedButtonItem key="month" text="{i18n>granMonth}"/>
+                    <SegmentedButtonItem key="week" text="{i18n>granWeek}"/>
+                  </items>
+                </SegmentedButton>
+                <ToolbarSpacer/>
+                <ObjectStatus text="{view>/schedule/rangeText}" icon="sap-icon://date-time"/>
+                <Button icon="sap-icon://navigation-left-arrow" press="onSchedulePrev" tooltip="{i18n>schedPrev}"/>
+                <Button text="{i18n>schedToday}" press="onScheduleToday"/>
+                <Button icon="sap-icon://navigation-right-arrow" press="onScheduleNext" tooltip="{i18n>schedNext}"/>
+              </OverflowToolbar>
+              <HBox alignItems="Center" wrap="Wrap" class="sapUiTinyMarginBottom">
+                <Text text="{i18n>scheduleHint}" class="sapUiSmallMarginEnd"/>
+                <core:HTML content="&lt;span class='pmLegend pmChipSuccess'&gt;&lt;/span&gt;"/><Text text="{i18n>legendDone}" class="sapUiSmallMarginEnd"/>
+                <core:HTML content="&lt;span class='pmLegend pmChipInformation'&gt;&lt;/span&gt;"/><Text text="{i18n>legendOpen}" class="sapUiSmallMarginEnd"/>
+                <core:HTML content="&lt;span class='pmLegend pmChipError'&gt;&lt;/span&gt;"/><Text text="{i18n>legendOverdue}"/>
+              </HBox>
+              <board:ScheduleBoard id="board" periods="{view>/schedule/periods}" rows="{view>/schedule/rows}"
+                unscheduledText="{i18n>unscheduled}" ariaLabel="{i18n>tabSchedule}"
+                reschedule="onReschedule" orderPress="onBoardOrderPress"/>
+            </VBox>
+          </IconTabFilter>
+        </items>
+      </IconTabBar>
+    </semantic:content>
+
+    <!-- footer toolbar: finalizing actions - here the undo for the last move -->
+    <semantic:footerCustomActions>
+      <Button text="{view>/undo/text}" icon="sap-icon://undo" press="onUndo"/>
+      <Button text="{i18n>dismiss}" type="Transparent" press="onDismissUndo"/>
+    </semantic:footerCustomActions>
+  </semantic:SemanticPage>
+</mvc:View>

@@ -1,0 +1,18 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+  <ResponsivePopover id="variantPopover" title="{i18n>variantMyViews}" placement="Bottom" contentWidth="20rem">
+    <content>
+      <List mode="SingleSelectMaster" selectionChange="onVariantSelect" items="{path:'view>/variants/list', templateShareable:false}"
+        includeItemInSelection="true">
+        <StandardListItem title="{view>name}" info="{view>info}" selected="{view>selected}"/>
+      </List>
+    </content>
+    <footer>
+      <OverflowToolbar>
+        <ToolbarSpacer/>
+        <Button text="{i18n>variantSave}" type="Emphasized" enabled="{view>/variants/canSave}" press="onVariantSave"/>
+        <Button text="{i18n>variantSaveAs}" press="onVariantSaveAs"/>
+        <Button text="{i18n>variantManage}" press="onVariantManage"/>
+      </OverflowToolbar>
+    </footer>
+  </ResponsivePopover>
+</core:FragmentDefinition>
