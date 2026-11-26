@@ -8,7 +8,16 @@ builder:
     excludes:
       - "/localService/**"
       - "/test/**"
-# The deploy target (system, package, transport) is passed on the command line or in
-# the BAS deploy wizard, e.g.:
-#   fiori deploy --config ui5-deploy.yaml --url https://<tenant>-api.s4hana.cloud.sap \
-#                --name ZPM_KANBAN --package ZPM_KANBAN --transport <TR>
+  customTasks:
+    - name: deploy-to-abap
+      afterTask: generateCachebusterInfo
+      configuration:
+        target:
+          destination: my402225
+        app:
+          name: ZPM_KANBAN
+          description: PM Maintenance Order Kanban
+          package: ZPM_OLENEX_KANBAN_PM
+          transport: ""        # empty: the deploy tool asks for one
+        exclude:
+          - /localService/

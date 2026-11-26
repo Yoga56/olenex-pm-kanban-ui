@@ -13,10 +13,10 @@ framework:
     - name: themelib_sap_horizon
 server:
   customMiddleware:
-    # sends /sap/... calls to the S/4HANA system; replace MY_S4_DESTINATION with the BTP destination name
+    # sends /sap/... calls to the S/4HANA system; destination = BTP destination of the S/4HANA tenant
     - name: fiori-tools-proxy
       afterMiddleware: compression
       configuration:
         backend:
           - path: /sap
-            destination: MY_S4_DESTINATION
+            destination: my402225
