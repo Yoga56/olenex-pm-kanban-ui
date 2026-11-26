@@ -109,10 +109,24 @@ sap.ui.define([
       return this._oData.load().then(function (aData) {
         this._aAll = aData.map(this._enrich.bind(this));
         this._buildOptions();
+        this._showDataInSchedule();
         this._refresh();
       }.bind(this)).catch(function (e) {
         MessageBox.error(this._oBundle.getText("loadFailed", [e && e.message || e]));
       }.bind(this)).finally(function () { oView.setBusy(false); });
+    },
+
+    /** First load only: if no order starts inside the default schedule window, end the window at the latest plan start. */
+    _showDataInSchedule: function () {
+      if (this._bWindowSet) { return; }
+      this._bWindowSet = true;
+      var aD = this._aAll.map(function (o) { return U.parse(o.MaintOrdBasicStartDate); }).filter(Boolean);
+      if (!aD.length) { return; }
+      var oM = this.getView().getModel("view"), oFrom = U.startOfMonth(U.parse(oM.getProperty("/schedule/windowStart")));
+      var oTo = U.addMonths(oFrom, MONTH_COUNT);
+      if (aD.some(function (d) { return d >= oFrom && d < oTo; })) { return; }
+      var oMax = aD.reduce(function (a, b) { return b > a ? b : a; });
+      oM.setProperty("/schedule/windowStart", U.iso(U.addMonths(U.startOfMonth(oMax), 1 - MONTH_COUNT)));
     },
 
     _enrich: function (o) {
