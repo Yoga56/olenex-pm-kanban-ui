@@ -360,14 +360,16 @@ sap.ui.define([
     },
 
     /** Single place that changes a plan start date (drag and drop, dialog, undo). */
-    _moveTo: function (o, sNew, bUndo) {
-      if (!o || !sNew || sNew === o.MaintOrdBasicStartDate || !movable(o)) { return Promise.resolve(); }
+    _moveTo: function (o, sNew, bUndo, sEnd) {
+      if (!o || !sNew || !movable(o) || (sNew === o.MaintOrdBasicStartDate && (!sEnd || sEnd === o.MaintOrdBasicEndDate))) { return Promise.resolve(); }
       var oView = this.getView(), oM = oView.getModel("view");
       var oBefore = { s: o.MaintOrdBasicStartDate, e: o.MaintOrdBasicEndDate };
 
       // optimistic update, reverted when the backend rejects the change
       var oOldD = U.parse(oBefore.s);
-      if (oOldD && o.MaintOrdBasicEndDate) {
+      if (sEnd) {
+        o.MaintOrdBasicEndDate = sEnd;
+      } else if (oOldD && o.MaintOrdBasicEndDate) {
         o.MaintOrdBasicEndDate = U.iso(U.addDays(U.parse(o.MaintOrdBasicEndDate), U.daysBetween(oOldD, U.parse(sNew))));
       }
       o.MaintOrdBasicStartDate = sNew;
@@ -375,7 +377,7 @@ sap.ui.define([
       this._refresh();
 
       oView.setBusy(true);
-      return this._oData.reschedule(o.MaintenanceOrder, sNew).then(function () {
+      return this._oData.reschedule(o.MaintenanceOrder, sNew, sEnd).then(function () {
         if (bUndo) {
           MessageToast.show(this._oBundle.getText("undoDone", [o.OrderText, U.format(sNew)]));
           this._oLastMove = null;
@@ -383,7 +385,7 @@ sap.ui.define([
         } else {
           MessageToast.show(this._oBundle.getText("rescheduleOk", [o.OrderText, U.format(sNew)]));
           if (oBefore.s) {      // an unscheduled order cannot be un-scheduled again
-            this._oLastMove = { kind: "date", id: o.MaintenanceOrder, start: oBefore.s };
+            this._oLastMove = { kind: "date", id: o.MaintenanceOrder, start: oBefore.s, end: oBefore.e };
             oM.setProperty("/undo", { visible: true, text: this._oBundle.getText("undoText", [o.OrderText]) });
           } else {
             this._oLastMove = null;
@@ -412,7 +414,7 @@ sap.ui.define([
       if (m.kind === "status") {
         this._doStatusChange(o, this._statusPath(o.KanbanStatus, m.status), true);
       } else {
-        this._moveTo(o, m.start, true);
+        this._moveTo(o, m.start, true, m.end);
       }
     },
 
@@ -550,7 +552,7 @@ sap.ui.define([
         equipment: [o.EquipmentText, o.EquipmentName].filter(Boolean).join(" - "),
         workCenter: o.MainWorkCenter,
         startText: o.StartDateText, endText: o.EndDateText,
-        newStart: o.MaintOrdBasicStartDate, movable: bMov, canSave: false
+        newStart: o.MaintOrdBasicStartDate, newEnd: o.MaintOrdBasicEndDate, movable: bMov, canSave: false
       });
       var oView = this.getView();
       this._pDialog = this._pDialog || Fragment.load({ id: oView.getId(), name: "zpm.kanban.view.OrderDialog", controller: this })
@@ -563,12 +565,13 @@ sap.ui.define([
     },
     onDlgDateChange: function () {
       var d = this._oDlg.getData(), o = this._find(d.id);
-      this._oDlg.setProperty("/canSave", !!d.newStart && !!o && d.newStart !== o.MaintOrdBasicStartDate && d.movable);
+      var bChanged = !!o && (d.newStart !== o.MaintOrdBasicStartDate || (d.newEnd || "") !== (o.MaintOrdBasicEndDate || ""));
+      this._oDlg.setProperty("/canSave", !!d.newStart && bChanged && d.movable && (!d.newEnd || d.newEnd >= d.newStart));
     },
     onDlgSave: function () {
       var d = this._oDlg.getData();
       this._pDialog.then(function (oDialog) { oDialog.close(); });
-      this._moveTo(this._find(d.id), d.newStart);
+      this._moveTo(this._find(d.id), d.newStart, false, d.newEnd);
     },
     onDlgOpenOrder: function () {
       var o = this._find(this._oDlg.getProperty("/id"));

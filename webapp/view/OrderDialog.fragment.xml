@@ -21,6 +21,9 @@
         <Label text="{i18n>dlgChangeStart}" labelFor="dlgDate"/>
         <DatePicker id="dlgDate" value="{dlg>/newStart}" valueFormat="yyyy-MM-dd" displayFormat="medium"
           enabled="{dlg>/movable}" change="onDlgDateChange"/>
+        <Label text="{i18n>dlgChangeEnd}" labelFor="dlgEnd"/>
+        <DatePicker id="dlgEnd" value="{dlg>/newEnd}" valueFormat="yyyy-MM-dd" displayFormat="medium"
+          enabled="{dlg>/movable}" change="onDlgDateChange"/>
       </form:SimpleForm>
     </content>
     <buttons>

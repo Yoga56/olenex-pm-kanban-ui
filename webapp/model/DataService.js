@@ -51,7 +51,7 @@ sap.ui.define([
     },
 
     /** Calls the RAP action ZR_PM_KANBANORDER~reschedule -> I_MaintenanceOrderTP update. */
-    reschedule: function (sOrder, sIsoDate) {
+    reschedule: function (sOrder, sIsoDate, sIsoEnd) {
       if (this._bMock) {
         return this._mockData().then(function (a) {
           var o = a.find(function (x) { return x.MaintenanceOrder === sOrder; });
@@ -60,7 +60,9 @@ sap.ui.define([
             return Promise.reject(new Error("Order is technically completed / closed"));
           }
           var oOld = U.parse(o.MaintOrdBasicStartDate), oNew = U.parse(sIsoDate);
-          if (oOld && o.MaintOrdBasicEndDate) {
+          if (sIsoEnd) {
+            o.MaintOrdBasicEndDate = sIsoEnd;
+          } else if (oOld && o.MaintOrdBasicEndDate) {
             o.MaintOrdBasicEndDate = U.iso(U.addDays(U.parse(o.MaintOrdBasicEndDate), U.daysBetween(oOld, oNew)));
           }
           o.MaintOrdBasicStartDate = sIsoDate;
@@ -70,6 +72,7 @@ sap.ui.define([
       var sPath = "/MaintOrder('" + encodeURIComponent(sOrder) + "')/" + ACTION_NS + ".reschedule(...)";
       var oAction = oModel.bindContext(sPath);
       oAction.setParameter("NewStartDate", sIsoDate);
+      if (sIsoEnd) { oAction.setParameter("NewEndDate", sIsoEnd); }
       return oAction.execute();
     },
 
