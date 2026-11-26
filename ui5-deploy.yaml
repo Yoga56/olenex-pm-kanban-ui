@@ -13,7 +13,7 @@ builder:
       afterTask: generateCachebusterInfo
       configuration:
         target:
-          destination: my402225
+          destination: my402244
         app:
           name: ZPM_KANBAN
           description: PM Maintenance Order Kanban

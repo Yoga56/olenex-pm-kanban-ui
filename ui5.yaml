@@ -19,4 +19,4 @@ server:
       configuration:
         backend:
           - path: /sap
-            destination: my402225
+            destination: my402244
